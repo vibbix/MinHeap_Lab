@@ -1,8 +1,10 @@
 package edu.wit.cs.comp2350;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 /**
  * 
@@ -12,13 +14,75 @@ import java.util.ArrayList;
 
 public class LAB2 {
 
-	// TODO: document this method
-	public static float heapAdd(float[] a) {
-		// TODO: implement this method
-		return a[0];
-	}
 
-	/********************************************
+    /**
+     * adds all the floats in an unordered array with a heap
+     *
+     * @param a The input array
+     * @return The sum total of all the floats
+     */
+    public static float heapAdd(float[] a) {
+        buildMaxHeap(a);
+        //sum up
+        return a[0];
+    }
+
+    //region heap code
+    private static void buildMaxHeap(float[] a) {
+        //heapify
+        for (int index = a.length / 2; index >= 1; index--) {
+            maxHeapify(a, index);
+        }
+    }
+
+    private static float removeMinFromMaxHeap(float[] a) {
+        throw new NotImplementedException();
+
+    }
+
+    private static void siftDown(float[] a) {
+        throw new NotImplementedException();
+
+    }
+
+    private static void sumHeap(float[] a, int index) {
+        throw new NotImplementedException();
+    }
+
+    private static void maxHeapify(float[] a, int index) {
+        int left = getLeft(index);
+        int right = getRight(index);
+        int largest = index;
+        if (left < a.length && a[left] > a[largest])
+            largest = left;
+        else if (right < a.length && a[right] > a[largest])
+            largest = right;
+        if (largest != index) {
+            swap(a, index, largest);
+            maxHeapify(a, largest);
+        }
+    }
+
+    private static final int getLeft(int n) {
+        return 2 * n;
+    }
+
+    private static final int getRight(int n) {
+        return (2 * n) + 1;
+    }
+
+    private static final int getParent(int n) {
+        return n / 2;
+    }
+
+    private static void swap(float[] a, int i, int j) {
+        float temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+    //endregion
+
+    /********************************************
 	 * 
 	 * You shouldn't modify anything past here
 	 * 
