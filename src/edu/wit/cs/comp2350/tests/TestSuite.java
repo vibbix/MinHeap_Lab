@@ -5,13 +5,13 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	LAB2TestCase.class,
+        LAB2TestCase.class,
 })
 
 public class TestSuite {
-	
-	static String stringOutput(String[] lines, Object[] values) {
-		return String.format(String.join("", lines), values);
-	}
-	
+
+    static String stringOutput(String[] lines, Object[] values) {
+        return String.format(String.join("", lines), values);
+    }
+
 }
