@@ -2,6 +2,7 @@ package edu.wit.cs.comp2350;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 /**
@@ -11,7 +12,6 @@ import java.util.Scanner;
 
 public class LAB2 {
 
-
     /**
      * adds all the floats in an unordered array with a heap
      *
@@ -20,14 +20,28 @@ public class LAB2 {
      */
     public static float heapAdd(float[] a) {
         MinHeap mh = new MinHeap((a.length < 2) ? 2 : a.length);
-        try {
-            mh.insert(a);
-        } catch (OutOfMemoryError mem) {
-            mem.printStackTrace();
-        }
+        mh.insert(a);
         float total = 0.0f;
         while (mh.getLength() > 0) {
-            total += mh.extractMin();
+            total += mh.popMin();
+        }
+        return total;
+    }
+
+    /**
+     * Uses a priority queue to add all
+     *
+     * @param a a array of float
+     * @return the sum of all floats
+     */
+    public static float queueAdd(float[] a) {
+        PriorityQueue<Float> pq = new PriorityQueue<>();
+        for (Float f : a) {
+            pq.add(f);
+        }
+        float total = 0.0f;
+        while (!pq.isEmpty()) {
+            total += pq.poll();
         }
         return total;
     }
@@ -41,7 +55,6 @@ public class LAB2 {
     // sum an array of floats sequentially
     public static float seqAdd(float[] a) {
         float ret = 0;
-
         for (int i = 0; i < a.length; i++)
             ret += a[i];
 

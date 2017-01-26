@@ -61,9 +61,12 @@ public class MinHeap {
                 this.heap[this.length] = val;
             } else {
                 this.heap[this.length] = val;
-                this.siftUp(this.length - 1);
+                this.siftUp(this.length);
             }
         }
+        //for(int i = getParent(this.length); i >= 1; i--){
+        //    minHeapify(i);
+        //}
     }
 
     /**
@@ -75,27 +78,30 @@ public class MinHeap {
         while (index > 0 && this.heap[getParent(index)] > this.heap[index]) {
             swap(this.heap, index, getParent(index));
             index = getParent(index);
+            //System.out.println("siftUp: index = " + index +"; "+ Arrays.toString(this.getTree()));
         }
     }
 
     /**
      * Iterates through heap and rebuilds tree to maintain the heap characteristic
      *
-     * @param index Index to run minHeapify
+     * @param parentIndex Index to run minHeapify
      */
-    public void minHeapify(int index) {
-        int smallest = index;
-        int l = getLeft(index);
-        int r = getRight(index);
+    public void minHeapify(int parentIndex) {
+        int smallest = parentIndex;
+        int l = getLeft(parentIndex);
+        int r = getRight(parentIndex);
         if (l < this.length && this.heap[smallest] > this.heap[l]) {
             smallest = l;
-        } else if (r < this.length && this.heap[smallest] > this.heap[r]) {
+        }
+        if (r < this.length && this.heap[smallest] > this.heap[r]) {
             smallest = r;
         }
-        if (smallest != index) {
-            swap(this.heap, index, smallest);
+        if (smallest != parentIndex) {
+            swap(this.heap, parentIndex, smallest);
             this.minHeapify(smallest);
         }
+        //System.out.println("minHeapify: parentIndex = " + parentIndex +"; "+ Arrays.toString(this.getTree()));
     }
 
     /**
@@ -103,9 +109,10 @@ public class MinHeap {
      *
      * @return the root value
      */
-    public float extractMin() {
+    public float popMin() {
         float min = this.heap[1];
-        swap(this.heap, 1, this.length - 1);
+        swap(this.heap, 1, this.length);
+        this.heap[this.length] = 0;
         this.length--;
         minHeapify(1);
         return min;

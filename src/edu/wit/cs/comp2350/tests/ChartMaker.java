@@ -46,13 +46,13 @@ public class ChartMaker extends ApplicationFrame {
      * @return A chart instance.
      */
     private static JFreeChart createChart() {
-        XYDataset[] data = new XYDataset[4];
+        XYDataset[] data = new XYDataset[5];
 
         data[0] = createDataset('m', "min");
         data[1] = createDataset('s', "sort");
         data[2] = createDataset('h', "heap");
         data[3] = createDataset('q', "sequential");
-
+        data[4] = createDataset('p', "priorityqueue");
 
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "Floating point runtimes ",// chart title
@@ -68,9 +68,9 @@ public class ChartMaker extends ApplicationFrame {
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.getDomainAxis().setLowerMargin(0.0);
         plot.getDomainAxis().setUpperMargin(0.0);
-        XYLineAndShapeRenderer renderer[] = new XYLineAndShapeRenderer[4];
+        XYLineAndShapeRenderer renderer[] = new XYLineAndShapeRenderer[5];
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             plot.setDataset(i, data[i]);
             renderer[i] = new XYLineAndShapeRenderer();
             plot.setRenderer(i, renderer[i]);
@@ -80,6 +80,8 @@ public class ChartMaker extends ApplicationFrame {
         plot.getRendererForDataset(plot.getDataset(1)).setSeriesPaint(0, Color.blue);
         plot.getRendererForDataset(plot.getDataset(2)).setSeriesPaint(0, Color.green);
         plot.getRendererForDataset(plot.getDataset(3)).setSeriesPaint(0, Color.darkGray);
+        plot.getRendererForDataset(plot.getDataset(4)).setSeriesPaint(0, Color.magenta);
+
 
         return chart;
     }
@@ -162,6 +164,9 @@ public class ChartMaker extends ApplicationFrame {
                         break;
                     case 's':
                         LAB2.sortAdd(values);
+                        break;
+                    case 'p':
+                        LAB2.queueAdd(values);
                         break;
                     default:
                         System.out.println("Invalid adding algorithm");
