@@ -29,7 +29,8 @@ public class FloatHeapTests {
     @Test
     public void insertSortConstructor() throws Exception {
         FloatHeap fh = new FloatHeap(INSERT_ONE);
-        Assert.assertArrayEquals(TREE_ONE, fh.getTreeArray(), DELTA);
+        float[] tree = fh.getTreeArray();
+        Assert.assertArrayEquals(TREE_ONE, tree, DELTA);
     }
 
     @Test

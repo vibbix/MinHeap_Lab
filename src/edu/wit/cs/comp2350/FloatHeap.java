@@ -23,6 +23,7 @@ public class FloatHeap {
     public FloatHeap(float[] arr) {
         this(arr.length);
         this.insert(arr);
+        //this.maxHeap();
     }
 
     /**
@@ -62,7 +63,7 @@ public class FloatHeap {
         a[i] = a[j];
         a[j] = temp;
     }
-
+    //endregion
     /**
      * inserts one or more numbers into the heap
      *
@@ -71,7 +72,7 @@ public class FloatHeap {
     public void insert(float... nums) {
         for (float num : nums) {
             this.incrementArrayLength();
-            this.array[this.length - 1] = Float.NEGATIVE_INFINITY;
+            this.array[this.length] = Float.NEGATIVE_INFINITY;
             increaseKey(num); //TODO: Optimize this by having it only run once on a batch set of numbers
         }
     }
@@ -95,9 +96,9 @@ public class FloatHeap {
         int left = getLeft(index);
         int right = getRight(index);
         int largest = index;
-        if (left < this.length && this.array[left] > this.array[largest])
+        if (left <= this.length && this.array[left] > this.array[largest])
             largest = left;
-        else if (right < this.length && this.array[right] > this.array[largest])
+        else if (right <= this.length && this.array[right] > this.array[largest])
             largest = right;
         if (largest != index) {
             swap(this.array, index, largest);
@@ -112,7 +113,7 @@ public class FloatHeap {
      */
     public float getMaximum() {
         checkArraySize();
-        return this.array[0];
+        return this.array[1];
     }
 
     /**
@@ -122,7 +123,7 @@ public class FloatHeap {
      */
     public float getMinimum() {
         checkArraySize();
-        int index = 0;
+        int index = 1;
         while (index < this.length) {
             index = getLeft(index);
         }
@@ -136,9 +137,9 @@ public class FloatHeap {
      */
     public float extractMaximum() {
         checkArraySize();
-        float max = this.array[0];
-        this.array[0] = this.array[this.length - 1];
-        this.array[this.length - 1] = 0;
+        float max = this.array[1];
+        this.array[1] = this.array[this.length];
+        this.array[this.length] = 0;
         this.length--;
         maxHeapify(0);
         return max;
@@ -150,12 +151,12 @@ public class FloatHeap {
     }
 
     private void increaseKey(float key) {
-        int i = this.length - 1;
+        int i = this.length;
         if (key < this.array[i]) {
             throw new IllegalArgumentException("New key is smaller than current key");
         }
         this.array[i] = key;
-        while (i > 0 && this.array[getParent(i)] < this.array[i]) {
+        while (i > 1 && (this.array[getParent(i)] < this.array[i])) {
             swap(this.array, i, getParent(i));
             i = getParent(i);
         }
@@ -180,9 +181,13 @@ public class FloatHeap {
      * @return Returns a copy of the heap tree array
      */
     public float[] getTreeArray() {
-        return Arrays.copyOf(this.array, this.length);
+        float[] copy = Arrays.copyOf(this.array, this.length);
+        for (int i = 1; i < copy.length - 2; i++) {
+            copy[i - 1] = copy[i];
+        }
+        return Arrays.copyOf(this.array, this.length - 1);
     }
-    //endregion
+
 
     @Override
     public String toString() {
