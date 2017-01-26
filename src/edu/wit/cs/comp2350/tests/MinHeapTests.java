@@ -13,7 +13,7 @@ public class MinHeapTests {
     private float[] ONE_INSERT = new float[]{1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f};
     private float[] ONE_COMPARE = new float[]{1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f};
     private float[] TWO_INSERT = new float[]{10.0f, 16.0f, 12.0f, 3.0f, 2.0f, 1.0f, 7.0f, 8.0f, 4.0f};
-    private float[] TWO_COMPARE = new float[]{1.0f, 3.0f, 2.0f, 7.0f, 8.0f, 4.0f, 10.0f, 16.0f, 12.0f};
+    private float[] TWO_COMPARE = new float[]{1.0f, 3.0f, 2.0f, 4.0f, 10.0f, 12.0f, 7.0f, 16.0f, 8.0f};
 
     @Test
     public void insertTest() {
@@ -65,19 +65,5 @@ public class MinHeapTests {
             compare[i] = mh.popMin();
         }
         Assert.assertArrayEquals(sorted, compare, 0);
-    }
-
-    @Test
-    public void verifyHeap() {
-        MinHeap mh = new MinHeap();
-        mh.insert(TWO_INSERT);
-        float[] comp = mh.getTree();
-        for (int i = 1; i < comp.length; i++) {
-            float parent = comp[i / 2];
-            if (i == 2)
-                parent = 1.0f;
-            float leaf = comp[i + 1];
-            Assert.assertTrue(parent <= leaf);
-        }
     }
 }

@@ -49,6 +49,22 @@ public class MinHeap {
         a[j] = temp;
     }
 
+    private static void minHeapify(int length, float[] heap, int parentIndex) {
+        int smallest = parentIndex;
+        int l = getLeft(parentIndex);
+        int r = getRight(parentIndex);
+        if (l < length && heap[smallest] > heap[l]) {
+            smallest = l;
+        }
+        if (r < length && heap[smallest] > heap[r]) {
+            smallest = r;
+        }
+        if (smallest != parentIndex) {
+            swap(heap, parentIndex, smallest);
+            minHeapify(length, heap, smallest);
+        }
+    }
+
     /**
      * Adds one or more values to the minheap
      *
@@ -64,9 +80,6 @@ public class MinHeap {
                 this.siftUp(this.length);
             }
         }
-        //for(int i = getParent(this.length); i >= 1; i--){
-        //    minHeapify(i);
-        //}
     }
 
     /**
@@ -88,20 +101,7 @@ public class MinHeap {
      * @param parentIndex Index to run minHeapify
      */
     public void minHeapify(int parentIndex) {
-        int smallest = parentIndex;
-        int l = getLeft(parentIndex);
-        int r = getRight(parentIndex);
-        if (l < this.length && this.heap[smallest] > this.heap[l]) {
-            smallest = l;
-        }
-        if (r < this.length && this.heap[smallest] > this.heap[r]) {
-            smallest = r;
-        }
-        if (smallest != parentIndex) {
-            swap(this.heap, parentIndex, smallest);
-            this.minHeapify(smallest);
-        }
-        //System.out.println("minHeapify: parentIndex = " + parentIndex +"; "+ Arrays.toString(this.getTree()));
+        minHeapify(this.length, this.heap, parentIndex);
     }
 
     /**
@@ -130,9 +130,32 @@ public class MinHeap {
         }
     }
 
-    //endregion
     public int getLength() {
         return this.length;
+    }
+
+    /**
+     * Sums all the floats
+     *
+     * @return the sum of all the floats in the heap
+     */
+    public float sum() {
+        float[] h = Arrays.copyOf(this.heap, this.length + 1);
+        int length = this.length;
+        float sum = 0.0f;
+        float c = 0.0f;
+        while (length > 0) {
+            float min = h[1];
+            swap(h, 1, length);
+            h[length] = 0;
+            length--;
+            minHeapify(length, h, 1);
+            float y = min - c;
+            float t = sum + y;
+            c = (t - sum) - y;
+            sum = t;
+        }
+        return sum;
     }
 
     /**
@@ -148,6 +171,7 @@ public class MinHeap {
         return Arrays.copyOf(copy, this.length);
     }
 
+    //endregion
     @Override
     public String toString() {
         return Arrays.toString(this.getTree());

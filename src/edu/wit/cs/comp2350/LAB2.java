@@ -21,11 +21,12 @@ public class LAB2 {
     public static float heapAdd(float[] a) {
         MinHeap mh = new MinHeap((a.length < 2) ? 2 : a.length);
         mh.insert(a);
-        float total = 0.0f;
-        while (mh.getLength() > 0) {
-            total += mh.popMin();
-        }
-        return total;
+//        float total = 0.0f;
+//        while (mh.getLength() > 0) {
+//            total += mh.popMin();
+//        }
+//        return total;
+        return mh.sum();
     }
 
     /**
@@ -35,15 +36,15 @@ public class LAB2 {
      * @return the sum of all floats
      */
     public static float queueAdd(float[] a) {
-        PriorityQueue<Float> pq = new PriorityQueue<>();
-        for (Float f : a) {
-            pq.add(f);
+        PriorityQueue<Double> pq = new PriorityQueue<>();
+        for (float f : a) {
+            pq.add((double) f);
         }
-        float total = 0.0f;
+        double total = 0.0f;
         while (!pq.isEmpty()) {
             total += pq.poll();
         }
-        return total;
+        return (float) total;
     }
 
     /********************************************
