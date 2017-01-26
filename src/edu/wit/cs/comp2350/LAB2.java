@@ -1,19 +1,16 @@
 package edu.wit.cs.comp2350;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 /**
- * 
  * @author kreimendahl
  */
 
 
 public class LAB2 {
-
 
     /**
      * adds all the floats in an unordered array with a heap
@@ -22,185 +19,160 @@ public class LAB2 {
      * @return The sum total of all the floats
      */
     public static float heapAdd(float[] a) {
-        buildMaxHeap(a);
-        //sum up
+        MinHeap mh = new MinHeap((a.length < 2) ? 2 : a.length);
+        mh.insert(a);
+//        float total = 0.0f;
+//        while (mh.getLength() > 0) {
+//            total += mh.popMin();
+//        }
+//        return total;
+        return mh.sum();
+    }
+
+    /**
+     * Uses a priority queue to add all
+     *
+     * @param a a array of float
+     * @return the sum of all floats
+     */
+    public static float queueAdd(float[] a) {
+        PriorityQueue<Double> pq = new PriorityQueue<>();
+        for (float f : a) {
+            pq.add((double) f);
+        }
+        double total = 0.0f;
+        while (!pq.isEmpty()) {
+            total += pq.poll();
+        }
+        return (float) total;
+    }
+
+    /********************************************
+     *
+     * You shouldn't modify anything past here
+     *
+     ********************************************/
+
+    // sum an array of floats sequentially
+    public static float seqAdd(float[] a) {
+        float ret = 0;
+        for (int i = 0; i < a.length; i++)
+            ret += a[i];
+
+        return ret;
+    }
+
+    // sort an array of floats and then sum sequentially
+    public static float sortAdd(float[] a) {
+        Arrays.sort(a);
+        return seqAdd(a);
+    }
+
+    // scan linearly through an array for two minimum values,
+    // remove them, and put their sum back in the array. repeat.
+    public static float min2ScanAdd(float[] a) {
+        int min1, min2;
+        float tmp;
+
+        if (a.length == 0) return 0;
+
+        for (int i = 0, end = a.length; i < a.length - 1; i++, end--) {
+
+            if (a[0] < a[1]) {
+                min1 = 0;
+                min2 = 1;
+            }    // initialize
+            else {
+                min1 = 1;
+                min2 = 0;
+            }
+
+            for (int j = 2; j < end; j++) {        // find two min indices
+                if (a[min1] > a[j]) {
+                    min2 = min1;
+                    min1 = j;
+                } else if (a[min2] > a[j]) {
+                    min2 = j;
+                }
+            }
+
+            tmp = a[min1] + a[min2];    // add together
+            if (min1 < min2) {            // put into first slot of array
+                a[min1] = tmp;            // fill second slot from end of array
+                a[min2] = a[end - 1];
+            } else {
+                a[min2] = tmp;
+                a[min1] = a[end - 1];
+            }
+        }
+
         return a[0];
     }
 
-    //region heap code
-    private static void buildMaxHeap(float[] a) {
-        //heapify
-        for (int index = a.length / 2; index >= 1; index--) {
-            maxHeapify(a, index);
+    // read floats from a Scanner
+    // returns an array of the floats read
+    private static float[] getFloats(Scanner s) {
+        ArrayList<Float> a = new ArrayList<Float>();
+
+        while (s.hasNextFloat()) {
+            float f = s.nextFloat();
+            if (f >= 0)
+                a.add(f);
         }
+        return toFloatArray(a);
     }
 
-    private static float removeMinFromMaxHeap(float[] a) {
-        throw new NotImplementedException();
-
+    // copies an ArrayList to an array
+    private static float[] toFloatArray(ArrayList<Float> a) {
+        float[] ret = new float[a.size()];
+        for (int i = 0; i < ret.length; i++)
+            ret[i] = a.get(i);
+        return ret;
     }
 
-    private static void siftDown(float[] a) {
-        throw new NotImplementedException();
 
-    }
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
 
-    private static void sumHeap(float[] a, int index) {
-        throw new NotImplementedException();
-    }
+        System.out.printf("Enter the adding algorithm to use ([h]eap, [m]in2scan, se[q], [s]ort): ");
+        char algo = s.next().charAt(0);
 
-    private static void maxHeapify(float[] a, int index) {
-        int left = getLeft(index);
-        int right = getRight(index);
-        int largest = index;
-        if (left < a.length && a[left] > a[largest])
-            largest = left;
-        else if (right < a.length && a[right] > a[largest])
-            largest = right;
-        if (largest != index) {
-            swap(a, index, largest);
-            maxHeapify(a, largest);
+        System.out.printf("Enter the positive floats that you would like summed: ");
+        float[] values = getFloats(s);
+        float sum = 0;
+
+        s.close();
+
+        if (values.length == 0) {
+            System.out.println("You must enter at least one value");
+            System.exit(0);
+        } else if (values.length == 1) {
+            System.out.println("Sum is " + values[0]);
+            System.exit(0);
+
         }
+
+        switch (algo) {
+            case 'h':
+                sum = heapAdd(values);
+                break;
+            case 'm':
+                sum = min2ScanAdd(values);
+                break;
+            case 'q':
+                sum = seqAdd(values);
+                break;
+            case 's':
+                sum = sortAdd(values);
+                break;
+            default:
+                System.out.println("Invalid adding algorithm");
+                System.exit(0);
+                break;
+        }
+
+        System.out.printf("Sum is %f\n", sum);
+
     }
-
-    private static final int getLeft(int n) {
-        return 2 * n;
-    }
-
-    private static final int getRight(int n) {
-        return (2 * n) + 1;
-    }
-
-    private static final int getParent(int n) {
-        return n / 2;
-    }
-
-    private static void swap(float[] a, int i, int j) {
-        float temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-    }
-    //endregion
-
-    /********************************************
-	 * 
-	 * You shouldn't modify anything past here
-	 * 
-	 ********************************************/
-
-	// sum an array of floats sequentially
-	public static float seqAdd(float[] a) {
-		float ret = 0;
-		
-		for (int i = 0; i < a.length; i++)
-			ret += a[i];
-		
-		return ret;
-	}
-
-	// sort an array of floats and then sum sequentially
-	public static float sortAdd(float[] a) {
-		Arrays.sort(a);
-		return seqAdd(a);
-	}
-
-	// scan linearly through an array for two minimum values,
-	// remove them, and put their sum back in the array. repeat.
-	public static float min2ScanAdd(float[] a) {
-		int min1, min2;
-		float tmp;
-		
-		if (a.length == 0) return 0;
-		
-		for (int i = 0, end = a.length; i < a.length - 1; i++, end--) {
-			
-			if (a[0] < a[1]) { min1 = 0; min2 = 1; }	// initialize
-			else { min1 = 1; min2 = 0; }
-			
-			for (int j = 2; j < end; j++) {		// find two min indices
-				if (a[min1] > a[j]) { min2 = min1; min1 = j; }
-				else if (a[min2] > a[j]) { min2 = j; }
-			}
-			
-			tmp = a[min1] + a[min2];	// add together
-			if (min1<min2) {			// put into first slot of array
-				a[min1] = tmp;			// fill second slot from end of array
-				a[min2] = a[end-1];
-			}
-			else {
-				a[min2] = tmp;
-				a[min1] = a[end-1];
-			}
-		}
-		
-		return a[0];
-	}
-
-	// read floats from a Scanner
-	// returns an array of the floats read
-	private static float[] getFloats(Scanner s) {
-		ArrayList<Float> a = new ArrayList<Float>();
-
-		while (s.hasNextFloat()) {
-			float f = s.nextFloat();
-			if (f >= 0)
-				a.add(f);
-		}
-		return toFloatArray(a);
-	}
-
-	// copies an ArrayList to an array
-	private static float[] toFloatArray(ArrayList<Float> a) {
-		float[] ret = new float[a.size()];
-		for(int i = 0; i < ret.length; i++)
-			ret[i] = a.get(i);
-		return ret;
-	}
-
-
-	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
-
-		System.out.printf("Enter the adding algorithm to use ([h]eap, [m]in2scan, se[q], [s]ort): ");
-		char algo = s.next().charAt(0);
-
-		System.out.printf("Enter the positive floats that you would like summed: ");
-		float[] values = getFloats(s);
-		float sum = 0;
-
-		s.close();
-
-		if (values.length == 0) {
-			System.out.println("You must enter at least one value");
-			System.exit(0);
-		}
-		else if (values.length == 1) {
-			System.out.println("Sum is " + values[0]);
-			System.exit(0);
-			
-		}
-		
-		switch (algo) {
-		case 'h':
-			sum = heapAdd(values);
-			break;
-		case 'm':
-			sum = min2ScanAdd(values);
-			break;
-		case 'q':
-			sum = seqAdd(values);
-			break;
-		case 's':
-			sum = sortAdd(values);
-			break;
-		default:
-			System.out.println("Invalid adding algorithm");
-			System.exit(0);
-			break;
-		}
-
-		System.out.printf("Sum is %f\n", sum);		
-
-	}
 
 }
