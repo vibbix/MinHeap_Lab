@@ -1,7 +1,5 @@
 package edu.wit.cs.comp2350;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -21,65 +19,18 @@ public class LAB2 {
      * @return The sum total of all the floats
      */
     public static float heapAdd(float[] a) {
-        buildMaxHeap(a);
-        //sum up
-        return a[0];
-    }
-
-    //region heap code
-    private static void buildMaxHeap(float[] a) {
-        //heapify
-        for (int index = a.length / 2; index >= 1; index--) {
-            maxHeapify(a, index);
+        MinHeap mh = new MinHeap((a.length < 2) ? 2 : a.length);
+        try {
+            mh.insert(a);
+        } catch (OutOfMemoryError mem) {
+            mem.printStackTrace();
         }
-    }
-
-    private static float removeMinFromMaxHeap(float[] a) {
-        throw new NotImplementedException();
-
-    }
-
-    private static void siftDown(float[] a) {
-        throw new NotImplementedException();
-
-    }
-
-    private static void sumHeap(float[] a, int index) {
-        throw new NotImplementedException();
-    }
-
-    private static void maxHeapify(float[] a, int index) {
-        int left = getLeft(index);
-        int right = getRight(index);
-        int largest = index;
-        if (left < a.length && a[left] > a[largest])
-            largest = left;
-        else if (right < a.length && a[right] > a[largest])
-            largest = right;
-        if (largest != index) {
-            swap(a, index, largest);
-            maxHeapify(a, largest);
+        float total = 0.0f;
+        while (mh.getLength() > 0) {
+            total += mh.extractMin();
         }
+        return total;
     }
-
-    private static final int getLeft(int n) {
-        return 2 * n;
-    }
-
-    private static final int getRight(int n) {
-        return (2 * n) + 1;
-    }
-
-    private static final int getParent(int n) {
-        return n / 2;
-    }
-
-    private static void swap(float[] a, int i, int j) {
-        float temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-    }
-    //endregion
 
     /********************************************
      *
