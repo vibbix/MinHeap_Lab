@@ -1,0 +1,12 @@
+Score: 85
+
+Failing for random float/int insertions
+
+== junit ==
+edu.wit.cs.comp2350.grading.LAB2Grading#testSmall: +70
+edu.wit.cs.comp2350.grading.LAB2Grading#testRandInts: +0
+edu.wit.cs.comp2350.grading.LAB2Grading#testRandFloats: +0
+edu.wit.cs.comp2350.grading.LAB2Grading#testBig: +15
+
+== ontime ==
+ontime: +0
